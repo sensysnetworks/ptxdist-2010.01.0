@@ -1,0 +1,7 @@
+## SECTION=fixme
+
+config @CLASS@@PACKET@
+	tristate
+	prompt "@packet@"
+	help
+	  FIXME

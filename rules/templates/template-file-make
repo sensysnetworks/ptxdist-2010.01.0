@@ -1,0 +1,106 @@
+# -*-makefile-*-
+#
+# Copyright (C) @YEAR@ by @AUTHOR@
+#
+# See CREDITS for details about who has contributed to this project.
+#
+# For further information about the PTXdist project and license conditions
+# see the README file.
+#
+
+#
+# We provide this package
+#
+PACKAGES-$(PTXCONF_@PACKET@) += @packet@
+
+# ----------------------------------------------------------------------------
+# Get
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/@packet@.get:
+	@$(call targetinfo)
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Extract
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/@packet@.extract:
+	@$(call targetinfo)
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Prepare
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/@packet@.prepare:
+	@$(call targetinfo)
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Compile
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/@packet@.compile:
+	@$(call targetinfo)
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Install
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/@packet@.install:
+	@$(call targetinfo)
+
+# FIXME: rsc: this needs a proper SYSROOT description!
+#
+# TODO:	For files that are required at compiletime (headers, libs to link against)
+#	you can copy these files to the sysroot directory.
+#	Use macro $(PTXCONF_SYSROOT_TARGET) for host files and $(PTXCONF_GNU_TARGET)
+#	for target files
+#
+#	Example for a host header file:
+#		@cp friesel.h $(PTXCONF_SYSROOT_TARGET)/include
+#	Example for a host library file:
+#		@cp friesel.so $(PTXCONF_SYSROOT_TARGET)/lib
+#	Example for a target file:
+#		@cp frasel.h  $(PTXCONF_GNU_TARGET)/include
+#	Example for a target library file:
+#		@cp frasel.so $(PTXCONF_GNU_TARGET)/lib
+#
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Target-Install
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/@packet@.targetinstall:
+	@$(call targetinfo)
+#
+# TODO: To build your own packet, if this step requires one
+#	@$(call install_init, @packet@)
+#	@$(call install_fixup,@packet@,PACKAGE,@packet@)
+#	@$(call install_fixup,@packet@,PRIORITY,optional)
+#	@$(call install_fixup,@packet@,VERSION,0)
+#	@$(call install_fixup,@packet@,SECTION,base)
+#	@$(call install_fixup,@packet@,AUTHOR,"@AUTHOR@")
+#	@$(call install_fixup,@packet@,DEPENDS,)
+#	@$(call install_fixup,@packet@,DESCRIPTION,missing)
+#
+# TODO: Add here all files that should be copied to the target
+# Note: Add everything before(!) call to macro install_finish
+#
+#	@$(call install_copy, @packet@, 0, 0, 0755, $(@PACKET@_DIR)/foobar, /dev/null)
+#
+#	@$(call install_finish,@packet@)
+
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Clean
+# ----------------------------------------------------------------------------
+
+@packet@_clean:
+	rm -rf $(STATEDIR)/@packet@.*
+
+# vim: syntax=make

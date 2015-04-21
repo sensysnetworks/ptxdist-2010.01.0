@@ -1,0 +1,32 @@
+## SECTION=networking
+menuconfig RSYNC3
+	tristate
+	prompt "rsync v3                      "
+	select OPENSSH_SSH
+	help
+	  rsync is a program that behaves in much the same way that rcp does,
+	  but has many more options and uses the rsync remote-update protocol to
+	  greatly speed up file transfers when the destination file is being
+	  updated.
+
+if RSYNC3
+
+config RSYNC3_IPV6
+	bool
+	prompt "Support IPV6"
+	help
+	  This switch enables IPV6 support in rsync
+
+config RSYNC3_LARGE_FILE
+	bool
+	default y
+	prompt "Large file support"
+	help
+	  Support for large files
+
+config RSYNC3_STARTSCRIPT
+	bool
+	default y
+	prompt "install /etc/init.d/rsync"
+
+endif

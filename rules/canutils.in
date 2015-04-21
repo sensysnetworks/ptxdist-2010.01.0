@@ -1,0 +1,56 @@
+## SECTION=communication
+
+menuconfig CANUTILS
+	tristate
+	prompt "canutils                      "
+	select KERNEL	if CANUTILS_BSP_KERNEL
+	help
+	  The canutils package contains tools to configure
+	  and test the Socket CAN framework.
+
+if CANUTILS
+
+config CANUTILS_VERSION
+	prompt "Version"
+	string
+	default "3.0.2"
+
+config CANUTILS_BSP_KERNEL
+	bool "use BSP's kernel headers instead of toolchain's"
+	help
+	  Select this if you're using a toolchain based on a
+	  kernel < 2.6.25. This kernel doesn't provide the
+	  necessary headers.
+
+config CANUTILS_CANCONFIG
+	bool
+	prompt "canconfig"
+	help
+	  Configuration Tool for socket can.
+
+config CANUTILS_CANDUMP
+	bool
+	prompt "candump"
+	help
+	  A little utility to dump canbus messages
+
+config CANUTILS_CANECHO
+	bool
+	prompt "canecho"
+	help
+	  A little utility to echo canbus messages
+
+config CANUTILS_CANSEND
+	bool
+	prompt "cansend"
+	help
+	  A little utility to send canbus messages from command line
+
+config CANUTILS_CANSEQUENCE
+	bool
+	prompt "cansequence"
+	help
+	  A little utility to send and verify canbus messages
+	  from command line with sequence numbers inside
+
+endif

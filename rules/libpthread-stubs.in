@@ -1,0 +1,4 @@
+## SECTION=multimedia_xorg_lib
+
+config LIBPTHREAD_STUBS
+	tristate

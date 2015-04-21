@@ -1,0 +1,12 @@
+## SECTION=shell_and_console
+
+config UPSTART
+	tristate
+	select DBUS
+	prompt "upstart"
+	help
+	  upstart is a replacement for the /sbin/init daemon which
+	  handles starting of tasks and services during boot, stopping
+	  them during shutdown and supervising them while the system
+	  is running.
+

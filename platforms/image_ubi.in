@@ -1,0 +1,46 @@
+## SECTION=image
+
+menuconfig IMAGE_UBI
+	bool
+	select IMAGE_UBIFS
+	prompt "Generate images/root.ubi      "
+	help
+	  Build an ubi image of the root filesystem. This image is suitable for
+	  writing to raw flash devices.
+
+if IMAGE_UBI
+
+config IMAGE_UBI_VOLUME_SIZE
+	string
+	prompt "ubi volume size"
+	default "<invalid>"
+	help
+	  ptxdist currently creates ubi images with only one volume in it. Specify
+	  its size here.
+
+config IMAGE_UBI_SUB_PAGE_SIZE
+	string
+	prompt "Sub page size"
+	default "<invalid>"
+	help
+	  This option is passed to the -s option of ubinize. Gain the
+	  correct value from 'mtdinfo -u' on your target.
+
+config IMAGE_UBI_VID_HEADER_OFFSET
+	string
+	prompt "VID header offset"
+	default "<invalid>"
+	help
+	  This option is passed to the -O option of ubinize. Gain the
+	  correct value from 'mtdinfo -u' on your target.
+
+config IMAGE_UBI_PEB_SIZE
+	string
+	prompt "physical eraseblock size"
+	default "<invalid>"
+	help
+	  This option is passed to the -p option of ubinize. Gain the
+	  correct value from 'mtdinfo -u' on your target.
+
+endif
+

@@ -1,0 +1,27 @@
+## SECTION=shell_and_console
+
+menuconfig KILLPROC
+	tristate "killproc                      "
+	help
+	  Utilities for starting and stopping of programs.
+
+config KILLPROC_CHECKPROC
+	bool
+	depends on KILLPROC
+	prompt "checkproc"
+
+config KILLPROC_KILLPROC
+	bool
+	depends on KILLPROC
+	prompt "killproc"
+
+config KILLPROC_STARTPROC
+	bool
+	depends on KILLPROC
+	prompt "startproc"
+
+config KILLPROC_USLEEP
+	bool
+	depends on KILLPROC
+	prompt "usleep"
+

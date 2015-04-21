@@ -1,0 +1,40 @@
+## SECTION=networking
+menuconfig WIRESHARK
+	tristate
+	depends on BROKEN
+	# incorrectly runs libgnutls-config from the host while trying
+	# to find out where tls is
+	prompt "wireshark                     "
+	select LIBPCAP
+	select GLIB
+	help
+	  Wireshark is a network traffic analyzer for Unix
+	  and Unix-like operating systems. It is a tool used
+	  to capture packets off the wire. Wireshark decodes
+	  numerous protocols (too many to list).
+
+if WIRESHARK
+
+config WIRESHARK_TSHARK
+	bool
+
+	prompt "tshark"
+	help
+	  This is the textmode version of wireshark
+
+# FIXME:
+#config WIRESHARK_WIRESHARK
+#	bool
+#	prompt "wireshark"
+#	help
+#	  This is the graphical version of wireshark
+#
+# FIXME: Not tested yet
+#config WIRESHARK_IPV6
+#	bool
+#	prompt "support ipv6"
+#	help
+#	  Activate this to support ipv6 in wireshark
+#
+
+endif

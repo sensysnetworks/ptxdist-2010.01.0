@@ -1,0 +1,50 @@
+## SECTION=networking
+# lsh configuration
+
+menuconfig LSH
+	tristate
+	prompt "lsh                           "
+	select LIBGMP
+	select LIBOOP
+	help
+	  lsh is an SSH implementation.
+if LSH
+
+config LSH_EXECUV
+	bool
+	prompt "Install lsh-execuf"
+	help
+	  FIXME: This item needs to be documented
+
+config LSH_LSHD
+	bool
+	prompt "Install lshd"
+	help
+	  FIXME: This item needs to be documented
+
+config LSH_SFTPD
+	bool
+	prompt  "Install sftp-server"
+	help
+	  FIXME: This item needs to be documented
+
+config LSH_MAKESEED
+	bool
+	prompt "Install lsh-make-seed"
+	help
+	  FIXME: This item needs to be documented
+
+config LSH_KEYGEN 
+	bool
+	prompt "Install lsh-keygen"
+	help
+	  FIXME: This item needs to be documented
+
+config LSH_WRITEKEY
+	bool
+	prompt "Install lsh-writekey"
+	help
+	  FIXME: This item needs to be documented
+
+endif
+

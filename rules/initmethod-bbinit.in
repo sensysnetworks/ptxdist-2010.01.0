@@ -1,0 +1,279 @@
+## SECTION=initmethod
+
+if INITMETHOD_BBINIT
+
+config INITMETHOD_BBINIT_ETC_INITD_BANNER
+	bool
+	default y
+	depends on FIGLET
+	prompt "install /etc/init.d/banner"
+	help
+	  This Option adds a specific vendor string to
+	  the script which displays a nifty ptxdist
+	   _
+	  | |__   __ _ _ __  _ __   ___ _ __
+	  | '_ \ / _` | '_ \| '_ \ / _ \ '__|
+	  | |_) | (_| | | | | | | |  __/ |
+	  |_.__/ \__,_|_| |_|_| |_|\___|_|
+	  page with the hostname and other stuff at
+	  startup.
+
+config INITMETHOD_BBINIT_ETC_INITD_MODULES
+	bool
+	prompt "install /etc/init.d/modules"
+	default y
+	help
+	  Look at /etc/modules and load all modules specified there.
+
+config INITMETHOD_BBINIT_ETC_INITD_LOGROTATE
+	bool
+	prompt "install /etc/init.d/logrotate"
+	default y
+	help
+	  The /etc/init.d/logrotate script is a minimal logrotator.
+
+config INITMETHOD_BBINIT_ETC_INITD_NETWORKING
+	bool
+	default y
+	prompt "install /etc/init.d/networking"
+	select BUSYBOX_IFUPDOWN			if BUSYBOX
+	select BUSYBOX_IFCONFIG			if BUSYBOX
+	select BUSYBOX_FEATURE_IFUPDOWN_IP	if BUSYBOX
+	help
+	  When enabled, this option installs the generic /etc/init.d/networking
+	  file. This script starts your network interfaces by calling 'ifup -a'.
+	  To run this script you will need the shell commands 'grep',
+	  'ifup'/'ifdown' and 'ifconfig'
+
+config INITMETHOD_BBINIT_ETC_INITD_RT_SET_BANDWIDTH
+	bool
+	prompt "install /etc/init.d/rt-set-bandwidth"
+	select ROOTFS_VAR
+	select ROOTFS_VAR_RUN
+	default y
+	help
+	  The /etc/init.d/rt-set-bandwidth script configures the bandwidth feature
+	  of linux-rt. Default is to disable it.
+
+menu "service startup configuration "
+
+config INITMETHOD_BBINIT_LINK_ALSA_UTILS
+	string
+	depends on ALSA_UTILS_STARTSCRIPT
+	prompt "alsa-utils"
+	default "S21alsa-utils"
+
+config INITMETHOD_BBINIT_LINK_APACHE2
+	string
+	depends on APACHE2_STARTSCRIPT
+	prompt "apache2"
+	default "S91apache2"
+
+config INITMETHOD_BBINIT_LINK_AT
+	string
+	depends on AT_STARTSCRIPT
+	prompt "atd"
+	default "S90atd"
+
+config INITMETHOD_BBINIT_LINK_CHRONY
+	string
+	depends on CHRONY_STARTSCRIPT
+	prompt "chrony"
+	default "S20chrony"
+
+config INITMETHOD_BBINIT_LINK_CONNMAN
+	string
+	depends on CONNMAN_STARTSCRIPT
+	prompt "connman"
+	default "S26connman"
+
+config INITMETHOD_BBINIT_LINK_CVS
+	string
+	depends on CVS_STARTSCRIPT
+	prompt "cvs"
+	default "S95cvs"
+
+config INITMETHOD_BBINIT_LINK_DBUS
+	string
+	depends on DBUS_STARTSCRIPT
+	prompt "dbus"
+	default "S12dbus"
+
+config INITMETHOD_BBINIT_LINK_DNSMASQ
+	string
+	depends on DNSMASQ_STARTSCRIPT
+	prompt "dnsmasq"
+	default "S24dnsmasq"
+
+config INITMETHOD_BBINIT_LINK_DROPBEAR
+	string
+	depends on DROPBEAR_STARTSCRIPT
+	prompt "dropbear"
+	default "S16dropbear"
+
+config INITMETHOD_BBINIT_LINK_INETD
+	string
+	depends on BUSYBOX_INETD_STARTSCRIPT || INETUTILS_INETD_STARTSCRIPT
+	prompt "inetd"
+	default "S95inetd"
+
+config INITMETHOD_BBINIT_LINK_SYSLOGD
+	string
+	depends on BUSYBOX_SYSLOGD_STARTSCRIPT || INETUTILS_SYSLOGD_STARTSRCIPT
+	prompt "syslogd"
+	default "S08syslogd"
+
+config INITMETHOD_BBINIT_LINK_CROND
+	string
+	depends on BUSYBOX_CROND_STARTSCRIPT
+	prompt "crond"
+	default "S10crond"
+
+config INITMETHOD_BBINIT_LINK_HWCLOCK
+	string
+	depends on BUSYBOX_HWCLOCK_STARTSCRIPT
+	prompt "hwclock"
+	default "S12hwclock"
+
+config INITMETHOD_BBINIT_LINK_LIGHTTPD
+	string
+	depends on LIGHTTPD_STARTSCRIPT
+	prompt "lighttpd"
+	default "S91lighttpd"
+
+config INITMETHOD_BBINIT_LINK_MYSQL
+	string
+	depends on MYSQL_STARTSCRIPT
+	prompt "mysql"
+	default "S95mysql"
+
+config INITMETHOD_BBINIT_LINK_NFSD
+	string
+	depends on NFSUTILS_NFSD_STARTSCRIPT
+	prompt "nfsd"
+	default "S95nfsd"
+
+config INITMETHOD_BBINIT_LINK_NTP
+	string
+	depends on NTP_NTPD_STARTSCRIPT
+	prompt "ntp"
+	default "S20ntp-server"
+
+config INITMETHOD_BBINIT_LINK_NTPC
+	string
+	depends on NTP_NTPC_STARTSCRIPT
+	prompt "ntpc"
+	default "S20ntp-client"
+
+config INITMETHOD_BBINIT_LINK_NTPCLIENT
+	string
+	depends on NTPCLIENT_STARTSCRIPT
+	prompt "ntpclient"
+	default "S20ntpclient"
+
+config INITMETHOD_BBINIT_LINK_OPENSSH
+	string
+	depends on OPENSSH_SSHD_STARTSCRIPT
+	prompt "openssh"
+	default "S16openssh"
+
+config INITMETHOD_BBINIT_LINK_PORTMAP
+	string
+	depends on PORTMAP_STARTSCRIPT
+	prompt "portmap"
+	default ""
+
+config INITMETHOD_BBINIT_LINK_PPPD
+	string
+	depends on PPP_STARTSCRIPT
+	prompt "pppd"
+	default "S09pppd"
+
+config INITMETHOD_BBINIT_LINK_PROFTPD
+	string
+	depends on PROFTPD_STARTSCRIPT
+	prompt "proftpd"
+	default "S91proftpd"
+
+config INITMETHOD_BBINIT_LINK_PUREFTPD
+	string
+	depends on PUREFTPD_STARTSCRIPT
+	prompt "pureftpd"
+	default "S91pureftpd"
+
+config INITMETHOD_BBINIT_LINK_RSYNCD
+	string
+	depends on RSYNC_STARTSCRIPT || RSYNC3_STARTSCRIPT
+	prompt "rsyncd"
+	default "S20rsyncd"
+
+config INITMETHOD_BBINIT_LINK_SAMBA
+	string
+	depends on SAMBA_STARTSCRIPT
+	prompt "samba"
+	default "S95samba"
+
+config INITMETHOD_BBINIT_LINK_SYSLOG_NG
+	string
+	depends on SYSLOGNG_STARTSCRIPT
+	prompt "syslog-ng"
+	default "S10syslog-ng"
+
+config INITMETHOD_BBINIT_LINK_TELNETD
+	string
+	depends on BUSYBOX_TELNETD_STARTSCRIPT || UTELNETD_STARTSCRIPT
+	prompt "telnetd"
+	default "S16telnetd"
+
+config INITMETHOD_BBINIT_LINK_THTTPD
+	string
+	depends on THTTPD_STARTSCRIPT
+	prompt "thttpd"
+	default "S91thttpd"
+
+config INITMETHOD_BBINIT_LINK_UDEV
+	string
+	depends on UDEV_STARTSCRIPT
+	prompt "udev"
+	default "S00udev"
+
+config INITMETHOD_BBINIT_LINK_BANNER
+	string
+	depends on INITMETHOD_BBINIT_ETC_INITD_BANNER
+	prompt "banner"
+	default "S99banner"
+
+config INITMETHOD_BBINIT_LINK_LOGROTATE
+	string
+	depends on INITMETHOD_BBINIT_ETC_INITD_LOGROTATE
+	prompt "logrotate"
+	default "S98logrotate"
+
+config INITMETHOD_BBINIT_LINK_MODULES
+	string
+	depends on INITMETHOD_BBINIT_ETC_INITD_MODULES
+	prompt "modules"
+	default "S98modules"
+
+config INITMETHOD_BBINIT_LINK_NETWORKING
+	string
+	depends on INITMETHOD_BBINIT_ETC_INITD_NETWORKING
+	prompt "networking"
+	default "S26networking"
+
+config INITMETHOD_BBINIT_ACPID
+	string
+	depends on ACPID_STARTSCRIPT
+	prompt "acpid"
+	default "S10acpid"
+
+config INITMETHOD_BBINIT_LINK_RT_SET_BANDWIDTH
+	string
+	depends on INITMETHOD_BBINIT_ETC_INITD_RT_SET_BANDWIDTH
+	prompt "rt-set-bandwidth"
+	default "S03rt-set-bandwidth"
+
+endmenu
+
+endif
+

@@ -1,0 +1,9 @@
+## SECTION=test_suites
+
+config LMBENCH
+	tristate
+	select LIBC_M
+	prompt "lmbench"
+	help
+	  Various tools for performance analysis
+

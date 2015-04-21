@@ -1,0 +1,17 @@
+## SECTION=debug_tools
+
+config OPROFILE
+	tristate
+	select LIBPOPT
+	select KERNEL_VMLINUX
+	select BUSYBOX_DIRNAME
+	select BUSYBOX_ID
+	select BUSYBOX_MKTEMP
+	select BUSYBOX_PIDOF
+	select BUSYBOX_PRINTF
+	select BINUTILS
+	select BINUTILS_OBJDUMP
+	prompt "oprofile"
+	help
+	  oprofile user space executables including opcontrol, opreport and others
+

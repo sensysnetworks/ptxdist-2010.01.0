@@ -1,0 +1,6 @@
+## SECTION=multimedia_xorg_proto
+
+config DRI2PROTO
+	tristate
+	help
+	  FIXME

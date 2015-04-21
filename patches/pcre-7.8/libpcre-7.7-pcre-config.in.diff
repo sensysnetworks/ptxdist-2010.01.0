@@ -1,0 +1,48 @@
+Subject: make pcre-config sysroot aware
+From: Luotao Fu <l.fu@pengutronix.de>
+  pcre-config is not sysroot aware and returns host directories while
+  crosscompiling. This patch fixes this issue
+
+Not intended for upstream.
+
+Signed-off-by: Luotao Fu <l.fu@pengutronix.de>
+---
+ pcre-config.in |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+Index: pcre-config.in
+===================================================================
+--- pcre-config.in.orig
++++ pcre-config.in
+@@ -15,10 +15,10 @@ fi
+ libR=
+ case `uname -s` in
+   *SunOS*)
+-  libR=" -R@libdir@"
++  libR=" -R${SYSROOT}@libdir@"
+   ;;
+   *BSD*)
+-  libR=" -Wl,-R@libdir@"
++  libR=" -Wl,-R${SYSROOT}@libdir@"
+   ;;
+ esac
+ 
+@@ -50,15 +50,15 @@ while test $# -gt 0; do
+       ;;
+     --cflags | --cflags-posix)
+       if test @includedir@ != /usr/include ; then
+-        includes=-I@includedir@
++        includes=-I${SYSROOT}@includedir@
+       fi
+       echo $includes
+       ;;
+     --libs-posix)
+-      echo -L@libdir@$libR -lpcreposix -lpcre
++      echo -L${SYSROOT}@libdir@$libR -lpcreposix -lpcre
+       ;;
+     --libs)
+-      echo -L@libdir@$libR -lpcre
++      echo -L${SYSROOT}@libdir@$libR -lpcre
+       ;;
+     *)
+       echo "${usage}" 1>&2

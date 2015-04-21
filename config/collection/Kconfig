@@ -1,0 +1,13 @@
+config _collectionconfig_MAGIC__
+	bool
+	default y
+
+menuconfig COLLECTION
+	bool "select optional packages      "
+	depends on !COLLECTION_ALL
+
+if COLLECTION
+source "generated/ptx_collection.in"
+endif
+
+source "generated/ptx_collection_all.in"

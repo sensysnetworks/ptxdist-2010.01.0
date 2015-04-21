@@ -1,0 +1,7 @@
+## SECTION=debug_tools
+
+config LTT_CONTROL
+	tristate
+	prompt "ltt-control"
+	help
+	  Linux Trace Toolkit ltt-control

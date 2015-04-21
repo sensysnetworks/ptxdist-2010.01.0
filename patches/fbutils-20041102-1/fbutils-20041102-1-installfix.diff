@@ -1,0 +1,26 @@
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: create non-existing directories
+
+Use install -D, in case the directory does not exist yet; this may
+happen when building with some cross build system which builds up the
+root filesystem from scratch.
+
+Signed-off-by: Robert Schwebel <r.schwebel@pengutronix.de>
+
+---
+ Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: fbutils-20041102-1/Makefile
+===================================================================
+--- fbutils-20041102-1.orig/Makefile
++++ fbutils-20041102-1/Makefile
+@@ -17,7 +17,7 @@ install:
+ 		$(INSTALL) fbset/fbset $(DESTDIR)/usr/sbin/fbset
+ 		$(INSTALL) fbcmap/fbcmap $(DESTDIR)/usr/sbin/fbcmap
+ 		$(INSTALL) con2fbmap/con2fbmap $(DESTDIR)/usr/sbin/con2fbmap
+-		$(INSTALL) -p etc/modes $(DESTDIR)/etc/fb/modes
++		$(INSTALL) -D -p etc/modes $(DESTDIR)/etc/fb/modes
+ 
+ include Rules.build
+ 

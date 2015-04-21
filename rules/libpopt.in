@@ -1,0 +1,13 @@
+## SECTION=system_libraries
+menuconfig LIBPOPT
+	tristate
+	prompt "libpopt                       "
+	help
+	  FIXME: This item needs to be documented
+
+config LIBPOPT_NLS
+	bool
+	prompt "native language support"
+	depends on LIBPOPT
+	help
+	  Specify if we want to have gettext internationalization.

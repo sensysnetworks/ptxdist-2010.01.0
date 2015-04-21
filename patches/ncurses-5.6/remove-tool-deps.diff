@@ -1,0 +1,35 @@
+Subject: remove tools build dependency
+From: Michael Olbrich <m.olbrich@pengutronix.de>
+
+make_keys is built as host tool and copied to the real package.
+This patch makes sure that it is not rebuilt again.
+
+Signed-off-by: Michael Olbrich <m.olbrich@pengutronix.de>
+
+---
+# 20081125: wsa: HACK: Not for upstream.
+
+ ncurses/Makefile.in |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+Index: b/ncurses/Makefile.in
+===================================================================
+--- a/ncurses/Makefile.in
++++ b/ncurses/Makefile.in
+@@ -189,7 +189,7 @@ $(DESTDIR)$(libdir) :
+ ./lib_gen.c : $(base)/MKlib_gen.sh ../include/curses.h
+ 	sh $(base)/MKlib_gen.sh "$(CPP) $(CPPFLAGS)" "$(AWK)" generated <../include/curses.h >$@
+ 
+-init_keytry.h: make_keys$(BUILD_EXEEXT) keys.list
++init_keytry.h: keys.list
+ 	./make_keys$(BUILD_EXEEXT) keys.list > $@
+ 
+ keys.list :	$(tinfo)/MKkeys_list.sh
+@@ -209,7 +209,6 @@ make_hash$(BUILD_EXEEXT) : \
+ 	sh $(serial)/MKexpanded.sh "$(CPP)" $(CPPFLAGS) > $@
+ 
+ ./comp_captab.c: \
+-		make_hash$(BUILD_EXEEXT) \
+ 		../include/hashsize.h \
+ 		$(tinfo)/MKcaptab.awk
+ 	sh $(tinfo)/MKcaptab.awk $(AWK) $(srcdir)/../include/@TERMINFO_CAPS@ > $@

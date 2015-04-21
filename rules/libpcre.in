@@ -1,0 +1,27 @@
+## SECTION=system_libraries
+menuconfig LIBPCRE
+	tristate
+	prompt "libpcre                       "
+	select GCCLIBS_CXX if LIBPCRE__LIBPCRECPP
+       select ZLIB if LIBPCRE__ENABLE_PCREGREP_LIBZ
+	help
+	  Perl Compatible Regluar Expressions Library
+
+if LIBPCRE
+
+config LIBPCRE__ENABLE_NEWLINE_IS_ANYCRLF
+       bool "Enable NL is any CRLF"
+
+config LIBPCRE__ENABLE_PCREGREP_LIBZ
+       bool "Enable grep libz"
+
+config LIBPCRE__ENABLE_UTF8
+       bool "Enable UTF8"
+
+config LIBPCRE__LIBPCREPOSIX
+       bool "install libpcreposix"
+
+config LIBPCRE__LIBPCRECPP
+       bool "install libpcrecpp (c++ bindings for libpcre)"
+
+endif

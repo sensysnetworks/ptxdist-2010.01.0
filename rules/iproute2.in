@@ -1,0 +1,58 @@
+## SECTION=networking
+
+menuconfig IPROUTE2
+	tristate
+	prompt "iproute2                      "
+	select DB if IPROUTE2_ARPD
+	select LIBC_DL
+	select LIBC_M
+	select LIBC_RESOLV
+	help
+	  Networking and traffic control tools
+
+	  The iproute suite, also known as iproute2, is a collection
+	  of utilities for networking and traffic control.
+
+	  These tools communicate with the Linux kernel via the
+	  (rt)netlink interface, providing advanced features not
+	  available through the legacy net-tools commands 'ifconfig'
+	  and 'route'.
+
+if IPROUTE2
+
+config IPROUTE2_IP
+	bool
+	prompt "ip"
+
+config IPROUTE2_RTMON
+	bool
+	prompt "rtmon"
+
+config IPROUTE2_TC
+	bool
+	prompt "tc"
+
+config IPROUTE2_ARPD
+	bool
+	prompt "arpd"
+	help
+	  Enabling this extry will enlarge your system by the berkely
+	  DB4.x library.
+
+config IPROUTE2_LNSTAT
+	bool
+	prompt "lnstat"
+
+config IPROUTE2_NSTAT
+	bool
+	prompt "nstat"
+
+config IPROUTE2_RTACCT
+	bool
+	prompt "rtacct"
+
+config IPROUTE2_SS
+	bool
+	prompt "ss"
+
+endif

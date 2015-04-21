@@ -1,0 +1,6 @@
+# update the used kernel to the current stable release
+patch-2.6.32.0-1.patch
+patch-2.6.32.1-2.bz2
+
+version.diff
+

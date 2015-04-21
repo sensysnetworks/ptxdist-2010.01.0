@@ -1,0 +1,9 @@
+## SECTION=development
+config PTXDIST
+	tristate
+	select COREUTILS
+	select COREUTILS_READLINK
+	prompt "ptxdist"
+	help
+	  Guess what ...?
+

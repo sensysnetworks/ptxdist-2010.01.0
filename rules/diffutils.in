@@ -1,0 +1,40 @@
+## SECTION=shell_and_console
+menuconfig DIFFUTILS
+	tristate
+	prompt "gnu diffutils                 "
+
+if DIFFUTILS
+
+config DIFFUTILS_DIFF
+	bool
+	prompt "diff"
+	depends on !BUSYBOX_DIFF || ALLYES
+	help
+	  diff - compare files line by line
+
+comment "BusyBox' diff selected"
+	depends on BUSYBOX_DIFF
+
+config DIFFUTILS_DIFF3
+	bool
+	prompt "diff3"
+	help
+	  diff3 - compare three files line by line
+
+config DIFFUTILS_SDIFF
+	bool
+	prompt "sdiff"
+	help
+	  sdiff - side-by-side merge of file differences
+
+config DIFFUTILS_CMP
+	bool
+	prompt "cmp"
+	depends on !BUSYBOX_CMP || ALLYES
+	help
+	  cmp - compare two files byte by byte
+
+comment "BusyBox' cmp selected"
+	depends on BUSYBOX_CMP
+
+endif

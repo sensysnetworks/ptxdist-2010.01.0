@@ -1,0 +1,34 @@
+## SECTION=rootfs
+
+menuconfig INITMETHOD
+	bool  "init                          "
+	default y
+
+if INITMETHOD
+
+choice
+	prompt "init method"
+
+	config INITMETHOD_BBINIT
+		bool
+		select BUSYBOX
+		select BUSYBOX_INIT
+		select BUSYBOX_HOSTNAME
+		select BUSYBOX_RUN_PARTS
+		prompt "busybox init    "
+
+	config INITMETHOD_UPSTART
+		bool
+		depends on BROKEN
+		prompt "upstart         "
+
+	config INITMETHOD_INITNG
+		bool
+		depends on BROKEN
+		prompt "init ng         "
+
+endchoice
+
+source "generated/initmethod.in"
+
+endif

@@ -1,0 +1,58 @@
+## SECTION=networking
+menuconfig PROFTPD
+	tristate
+	prompt "proftpd                       "
+	select BUSYBOX_START_STOP_DAEMON			if PROFTPD_STARTSCRIPT
+	select BUSYBOX_FEATURE_START_STOP_DAEMON_FANCY		if PROFTPD_STARTSCRIPT
+	select BUSYBOX_FEATURE_START_STOP_DAEMON_LONG_OPTIONS	if PROFTPD_STARTSCRIPT
+	help
+	  versatile, virtual-hosting FTP daemon
+
+	  ProFTPd is a powerful replacement for wu-ftpd. This File
+	  Transfer Protocol daemon supports hidden directories,
+	  virtual hosts, and per-directory ".ftpaccess" files. It uses
+	  a single main configuration file, with a syntax similar to
+	  Apache.
+
+	  Because of the advanced design, anonymous-FTP directories
+	  can have an arbitrary internal structure (bin, lib, etc, and
+	  special files are not needed). Advanced features such as
+	  multiple password files and upload/download ratios are also
+	  supported.
+
+if PROFTPD
+
+config PROFTPD_PAM
+	bool
+	prompt "PAM support"
+	depends on BROKEN
+	help
+	  FIXME: This item needs to be documented
+
+config PROFTPD_SENDFILE
+	bool
+	prompt "sendfile support"
+	help
+	  FIXME: This item needs to be documented
+
+config PROFTPD_SHADOW
+	bool
+	prompt "shadow support"
+	default y
+	help
+	  FIXME: This item needs to be documented
+
+config PROFTPD_AUTOSHADOW
+	bool
+	prompt "autoshadow support"
+	depends on PROFTPD_SHADOW
+	default y
+	help
+	  FIXME: This item needs to be documented
+
+config PROFTPD_STARTSCRIPT
+	bool
+	default y
+	prompt "install /etc/init.d/proftpd"
+
+endif

@@ -1,0 +1,99 @@
+## SECTION=networking
+menuconfig NET_SNMP
+	tristate
+	prompt "net-snmp                      "
+
+if NET_SNMP
+
+config NET_SNMP_MINI_AGENT
+	bool
+	default y
+	prompt "minimal agent"
+
+config NET_SNMP_AGENT
+	bool
+	prompt "agent (snmpd)"
+
+config NET_SNMP_APPLICATIONS
+	bool
+	prompt "apps (snmpget, ...)"
+
+config NET_SNMP_SCRIPTS
+	bool
+	prompt "scripts (mib2c, ...)"
+
+config NET_SNMP_MIBS
+	bool
+	prompt "mib files"
+
+config NET_SNMP_MIB_LOADING
+	bool
+	prompt "include code that parses and manipulates mib files"
+
+config NET_SNMP_SNMPV1
+	bool
+	prompt "support for SNMPv1"
+
+config NET_SNMP_SNMPV2C
+	bool
+	prompt "support for SNMPv2c"
+
+config NET_SNMP_DES
+	bool
+	prompt "DES encryption"
+
+config NET_SNMP_MD5
+	bool
+	prompt "MD5 authentication"
+
+config NET_SNMP_SNMPTRAPD
+	bool
+	prompt "agentx subagent code in snmptrapd"
+
+config NET_SNMP_IPV6
+	bool
+	prompt "support for IPv6"
+
+config NET_SNMP_LOCAL_SMUX
+	bool
+	prompt "restrict SMUX connections to localhost (by default)"
+
+config NET_SNMP_DEBUGGING
+	bool
+	prompt "debugging"
+
+config NET_SNMP_DEVELOPER
+	bool
+	prompt "super-duper-extra-compile-warnings using gcc"
+
+config NET_SNMP_DEFAULT_VERSION
+	prompt "default SNMP version: 1, 2 (for SNMPv2c), or 3"
+	string
+	default	"3"
+
+config NET_SNMP_LOGFILE
+	prompt "logfile location"
+	string
+	default	"/var/log/snmpd.log"
+
+config NET_SNMP_PERSISTENT_DIR
+	prompt "persistent data storage directory"
+	string
+	default	"/var/net-snmp"
+
+config NET_SNMP_MIB_MODULES
+	prompt "additional mib modules"
+	string
+	default	""
+
+config NET_SNMP_DEFAULT_MIBS
+	prompt "default mib id's to read"
+	string
+	default	""
+
+config NET_SNMP_MIB_INSTALL_DIR
+	prompt "directory to install mib files"
+	string
+	default	"/usr/share/snmp/mibs"
+
+endif

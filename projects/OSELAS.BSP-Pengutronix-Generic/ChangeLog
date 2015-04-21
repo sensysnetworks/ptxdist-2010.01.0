@@ -1,0 +1,14 @@
+2010-01-08	Juergen Beisert <jbe@pengutronix.de>
+
+		* Platforms: Change to arm-qemu-3 and i586-qemu-3
+		* BSP: Release for ptxdist-2010.01.0
+
+2010-01-05	Juergen Beisert <jbe@pengutronix.de>
+
+		* Platforms: Adding the i586 generic platform
+		* Platforms: Change to arm-qemu-1 and i586-qemu-1
+
+2009-12-16	Juergen Beisert <jbe@pengutronix.de>
+
+		* Platforms: Adding the ARM versatile PB platform
+

@@ -1,0 +1,5 @@
+## SECTION=hosttools_noprompt
+
+config HOST_SQUASHFS_TOOLS
+	tristate
+	select HOST_ZLIB

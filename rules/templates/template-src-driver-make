@@ -1,0 +1,95 @@
+# -*-makefile-*-
+#
+# Copyright (C) 2009 by @YEAR@ @AUTHOR@
+#
+# See CREDITS for details about who has contributed to this project.
+#
+# For further information about the PTXdist project and license conditions
+# see the README file.
+#
+
+#
+# We provide this package
+#
+PACKAGES-$(PTXCONF_@PACKET@) += @packet@
+
+#
+# Paths and names and versions
+#
+@PACKET@_VERSION	:= @VERSION@
+@PACKET@		:= @packet@-$(@PACKET@_VERSION)
+@PACKET@_SRCDIR		:= $(PTXDIST_WORKSPACE)/local_src/$(@PACKET@)
+@PACKET@_DIR		:= $(BUILDDIR)/$(@PACKET@)
+@PACKET@_LICENSE	:= unknown
+
+ifdef PTXCONF_@PACKET@
+$(STATEDIR)/kernel.targetinstall.post: $(STATEDIR)/@packet@.targetinstall
+endif
+
+# ----------------------------------------------------------------------------
+# Extract
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/@packet@.extract:
+	@$(call targetinfo)
+	@$(call clean, $(@PACKET@_DIR))
+	@$(call patchin, @PACKET@, $(@PACKET@_SRCDIR))
+	mkdir -p $(@PACKET@_DIR)
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Prepare
+# ----------------------------------------------------------------------------
+
+@PACKET@_PATH	:= PATH=$(CROSS_PATH)
+@PACKET@_ENV 	:= $(CROSS_ENV)
+
+$(STATEDIR)/@packet@.prepare:
+	@$(call targetinfo)
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Compile
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/@packet@.compile:
+	@$(call targetinfo)
+#	# The kernel cannot build an out-of-tree driver out-of-tree :-)
+#	# So we make a local copy.
+	rm -fr $(@PACKET@_DIR)
+	cp -a $(@PACKET@_SRCDIR) $(@PACKET@_DIR)
+	$(KERNEL_PATH) $(KERNEL_ENV) $(MAKE) $(KERNEL_MAKEVARS) \
+		-C $(KERNEL_DIR) \
+		M=$(@PACKET@_DIR) \
+		modules
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Install
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/@packet@.install:
+	@$(call targetinfo)
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Target-Install
+# ----------------------------------------------------------------------------
+
+$(STATEDIR)/@packet@.targetinstall:
+	@$(call targetinfo)
+	$(KERNEL_PATH) $(KERNEL_ENV) $(MAKE) $(KERNEL_MAKEVARS) \
+		-C $(KERNEL_DIR) \
+		M=$(@PACKET@_DIR) \
+		modules_install
+	@$(call touch)
+
+# ----------------------------------------------------------------------------
+# Clean
+# ----------------------------------------------------------------------------
+
+@packet@_clean:
+	rm -rf $(STATEDIR)/@packet@.*
+	rm -fr $(@PACKET@_DIR)
+
+# vim: syntax=make

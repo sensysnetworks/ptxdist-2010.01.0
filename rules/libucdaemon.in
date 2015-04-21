@@ -1,0 +1,6 @@
+## SECTION=system_libraries
+config LIBUCDAEMON
+	tristate
+	prompt "libucdaemon"
+	help
+	  FIXME

@@ -1,0 +1,37 @@
+## SECTION=test_suites
+
+menuconfig RT_TESTS
+	tristate
+	select LIBC_PTHREAD
+	select LIBC_RT
+	prompt "rt-tests                      "
+	help
+	  Test programs for rt kernels
+
+	  rt-tests contains a set of programs that test and measure
+	  various components of "realtime" kernel behavior, such as
+	  timer latency, signal latency and the functioning of
+	  priority-inheritance mutexes.
+
+if RT_TESTS
+
+config RT_TESTS_CYCLICTEST
+	bool
+	prompt "cyclictest"
+	help
+	  cyclictest is a benchmark program that can be used to find
+	  worst case realtime latencies.
+
+config RT_TESTS_SIGNALTEST
+	bool
+	prompt "signaltest"
+	help
+	  signal test program
+
+config RT_TESTS_PI_STRESS
+	bool
+	prompt "pi_stress"
+	help
+	  priority inheritance stress test
+
+endif

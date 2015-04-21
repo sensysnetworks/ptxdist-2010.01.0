@@ -1,0 +1,16 @@
+#
+# config/Kconfig: Main menu structure definition
+# Copyright (C) 2002-2006, 2009 by Robert Schwebel <r.schwebel@pengutronix.de>
+#
+
+mainmenu "Configuration"
+
+config MODULES
+	bool
+	default y
+
+source "generated/fixme.in"
+
+source "generated/project_name.in"
+
+source "rules/Kconfig"

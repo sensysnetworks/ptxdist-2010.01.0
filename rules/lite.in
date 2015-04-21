@@ -1,0 +1,8 @@
+## SECTION=multimedia_directfb
+
+config LITE
+	tristate
+	prompt "lite"
+	select DIRECTFB
+	help
+	  LiTE is a Toolkit Engine for DirectFB

@@ -1,0 +1,26 @@
+## SECTION=shell_and_console
+menuconfig SUDO
+	tristate
+	prompt "sudo                          "
+	help
+	  Sudo is a program designed to allow a sysadmin
+	  to give limited root privileges to users and log
+	  root activity.  The basic philosophy is to give
+ 	  as few privileges as possible but still allow
+	  people to get their work done.
+
+if SUDO
+
+config SUDO__SENDMAIL
+	bool
+	# FIXME: sendmail support is buggy and searches for
+	# /sbin/sendmail on the host
+	#prompt "sendmail support"
+
+config SUDO__ETC_SUDOERS
+	bool "Install sudoers file into /etc"
+	default y
+	help
+	  Installs /etc/sudoers from a selectable source
+
+endif

@@ -1,0 +1,8 @@
+## SECTION=multimedia_libs
+
+config PIXMAN
+	tristate
+	prompt "pixman"
+	help
+	  Pixman contains lowlevel pixel manipulation routines and is used by
+	  both xorg and cairo.

@@ -1,0 +1,56 @@
+Fix various issues while cross compiling
+
+---
+ Makefile |   21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
+
+Index: cpufrequtils-005/Makefile
+===================================================================
+--- cpufrequtils-005.orig/Makefile
++++ cpufrequtils-005/Makefile
+@@ -73,17 +73,20 @@ INSTALL = /usr/bin/install -c
+ INSTALL_PROGRAM = ${INSTALL}
+ INSTALL_DATA  = ${INSTALL} -m 644
+ INSTALL_SCRIPT = ${INSTALL_PROGRAM}
+-LIBTOOL = /usr/bin/libtool
++# --tag required to make libtool happy about the source type
++LIBTOOL = libtool --tag CC
+ 
+ # If you are running a cross compiler, you may want to set this
+ # to something more interesting, like "arm-linux-".  If you want
+ # to compile vs uClibc, that can be done here as well.
+-CROSS = #/usr/i386-linux-uclibc/usr/bin/i386-uclibc-
+-CC = $(CROSS)gcc
+-LD = $(CROSS)gcc
+-AR = $(CROSS)ar
+-STRIP = $(CROSS)strip
+-RANLIB = $(CROSS)ranlib
++
++# ptxdist will overwrite them
++#CROSS = #/usr/i386-linux-uclibc/usr/bin/i386-uclibc-
++#CC = $(CROSS)gcc
++#LD = $(CROSS)gcc
++#AR = $(CROSS)ar
++#STRIP = $(CROSS)strip
++#RANLIB = $(CROSS)ranlib
+ HOSTCC = gcc
+ 
+ 
+@@ -143,7 +146,7 @@ ifeq ($(strip $(NLS)),true)
+ endif
+ 
+ 
+-CFLAGS += $(WARNINGS) -I$(GCCINCDIR)
++CFLAGS += $(WARNINGS) -I$(GCCINCDIR) $(CPPFLAGS)
+ 
+ ifeq ($(strip $(V)),false)
+ 	QUIET=@$(PWD)/build/ccdv
+@@ -189,7 +192,7 @@ libcpufreq.la: $(LIB_OBJS) $(LIB_HEADERS
+ libcpufreq: libcpufreq.la
+ 
+ cpufreq-%: libcpufreq.la $(UTIL_OBJS)
+-	$(QUIET) $(CC) $(CFLAGDEF) $(CFLAGS) -g -I. -I./lib/ -c -o utils/$@.o utils/$*.c
++	$(QUIET) $(CC) $(CFLAGDEF) $(CFLAGS) -O2 -g -I. -I./lib/ -c -o utils/$@.o utils/$*.c
+ 	$(QUIET) $(CC) $(CFLAGDEF) $(CFLAGS) -g -I./lib/ -L. -L./.libs/ -lcpufreq -o $@ utils/$@.o
+ 	$(QUIET) $(STRIPCMD) $@
+ 
