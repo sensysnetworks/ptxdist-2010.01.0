@@ -1,0 +1,43 @@
+diff --git a/src/libopensc/reader-ctapi.c b/src/libopensc/reader-ctapi.c
+index 13948ec..6dc2a99 100644
+--- a/src/libopensc/reader-ctapi.c
++++ b/src/libopensc/reader-ctapi.c
+@@ -95,7 +95,8 @@ static int ctapi_reset(sc_reader_t *reader)
+ 
+ 	rv = priv->funcs.CT_data(priv->ctn, &dad, &sad, 5, cmd, &lr, rbuf);
+ 	if (rv || (lr < 2)) {
+-		sc_debug(reader->ctx, SC_LOG_DEBUG_NORMAL, "Error getting status of terminal: %d, using defaults\n", rv);
++		sc_debug(reader->ctx, SC_LOG_DEBUG_NORMAL,
++			 "Error getting status of terminal: %d/%d, using defaults\n", rv, lr);
+ 		return SC_ERROR_TRANSMIT_FAILED;
+ 	}
+ 	if (rbuf[lr-2] != 0x90) {
+@@ -126,7 +127,8 @@ static int refresh_attributes(sc_reader_t *reader)
+ 
+ 	rv = priv->funcs.CT_data(priv->ctn, &dad, &sad, 5, cmd, &lr, rbuf);
+ 	if (rv || (lr < 3) || (rbuf[lr-2] != 0x90)) {
+-		sc_debug(reader->ctx, SC_LOG_DEBUG_NORMAL, "Error getting status of terminal: %d/%d/0x%x\n", rv, lr, rbuf[lr-2]);
++		sc_debug(reader->ctx, SC_LOG_DEBUG_NORMAL,
++			 "Error getting status of terminal: %d/%d/0x%x\n", rv, lr, rbuf[lr-2]);
+ 		return SC_ERROR_TRANSMIT_FAILED;
+ 	}
+ 	if (lr < 4) {
+@@ -187,7 +189,7 @@ static int ctapi_transmit(sc_reader_t *reader, sc_apdu_t *apdu)
+ 		goto out;
+ 	}
+ 	/* encode and log the APDU */
+-	r = sc_apdu_get_octets(reader->ctx, apdu, &sbuf, &ssize, SC_PROTO_RAW);
++	r = sc_apdu_get_octets(reader->ctx, apdu, &sbuf, &ssize, SC_PROTO_T0);
+ 	if (r != SC_SUCCESS)
+ 		goto out;
+ 	sc_apdu_log(reader->ctx, SC_LOG_DEBUG_NORMAL, sbuf, ssize, 1);
+@@ -416,7 +418,8 @@ static int ctapi_load_module(sc_context_t *ctx,
+ 		
+ 		rv = priv->funcs.CT_data(priv->ctn, &dad, &sad, 5, cmd, &lr, rbuf);
+ 		if (rv || (lr < 4) || (rbuf[lr-2] != 0x90)) {
+-			sc_debug(reader->ctx, SC_LOG_DEBUG_NORMAL, "Error getting status of terminal: %d, using defaults\n", rv);
++			sc_debug(reader->ctx, SC_LOG_DEBUG_NORMAL,
++				 "Error getting status of terminal: %d/%d/%02x, using defaults\n", rv, lr, rbuf[lr-2]);
+ 		}
+ 		if (rbuf[0] != CTBCS_P2_STATUS_TFU) {
+ 			/* Number of slots might also detected by using CTBCS_P2_STATUS_ICC.

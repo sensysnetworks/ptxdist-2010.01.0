@@ -1,0 +1,13 @@
+diff --git a/config.h b/config.h
+index d0c3b17..2ce806c 100644
+--- a/config.h
++++ b/config.h
+@@ -75,7 +75,7 @@
+ ** or whatever.  If you don't want any limit, comment this out, but that's
+ ** probably a really bad idea.
+ */
+-#define CGI_TIMELIMIT 30
++#define CGI_TIMELIMIT (4*3600)
+ 
+ /* CONFIGURE: Maximum number of simultaneous CGI programs allowed.
+ ** If this many are already running, then attempts to run more will

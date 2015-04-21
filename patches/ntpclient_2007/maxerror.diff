@@ -1,0 +1,15 @@
+diff --git a/ntpclient.c b/ntpclient.c
+index fad130e..54fe3c8 100644
+--- a/ntpclient.c
++++ b/ntpclient.c
+@@ -160,6 +160,10 @@ static int set_freq(int new_freq)
+ {
+ 	/* OS dependent routine to set a new value of clock frequency.
+ 	 */
++	if (abs(new_freq) > (185 * (1<<16))) {
++		fprintf(stderr, "new freq %d too large; aborting", new_freq);
++		exit(1);
++	}
+ #ifdef __linux__
+ 	struct timex txc;
+ 	txc.modes = ADJ_FREQUENCY;

@@ -1,0 +1,10 @@
+--- uucp-1.07/policy.h	2003-05-28 23:08:45.000000000 -0700
++++ uucp-1.07-p/policy.h	2010-06-29 23:43:53.277552825 -0700
+@@ -303,6 +303,7 @@
+ /* #define LOCKDIR "/usr/spool/uucp/LCK" */
+ /* #define LOCKDIR "/var/spool/lock" */
+ /* #define LOCKDIR "/var/lock" */
++#define LOCKDIR "/var/spool/uucp"
+ 
+ /* You must also specify the format of the lock files by setting
+    exactly one of the following macros to 1.  Check an existing lock

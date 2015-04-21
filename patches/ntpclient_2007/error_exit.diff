@@ -1,0 +1,79 @@
+diff --git a/adjtimex.c b/adjtimex.c
+index 4b6658a..c871d64 100644
+--- a/adjtimex.c
++++ b/adjtimex.c
+@@ -110,17 +110,20 @@ int main(int argc, char ** argv)
+ 	}
+ 	if (argc != optind) { /* no valid non-option parameters */
+ 		usage(argv[0]);
+ 		exit(1);
+ 	}
+ 
+ 	ret = adjtimex(&txc);
+ 
+-	if (ret < 0) perror("adjtimex");
++	if (ret < 0) {
++		perror("adjtimex");
++		exit(1);
++	}
+ 
+ 	if (!quiet && ret>=0) {
+ 		printf(
+ 			"    mode:         %d\n"
+ 			"-o  offset:       %ld\n"
+ 			"-f  frequency:    %ld\n"
+ 			"    maxerror:     %ld\n"
+ 			"    esterror:     %ld\n"
+diff --git a/ntpclient.c b/ntpclient.c
+index 446816e..fad130e 100644
+--- a/ntpclient.c
++++ b/ntpclient.c
+@@ -502,17 +502,20 @@ static void primary_loop(int usd, struct ntp_control *ntpc)
+ 	to.tv_sec=0;
+ 	to.tv_usec=0;
+ 	for (;;) {
+ 		FD_ZERO(&fds);
+ 		FD_SET(usd,&fds);
+ 		i=select(usd+1,&fds,NULL,NULL,&to);  /* Wait on read or error */
+ 		if ((i!=1)||(!FD_ISSET(usd,&fds))) {
+ 			if (i<0) {
+-				if (errno != EINTR) perror("select");
++				if (errno != EINTR) {
++					perror("select");
++					exit(1);
++				}
+ 				continue;
+ 			}
+ 			if (to.tv_sec == 0) {
+ 				if (probes_sent >= ntpc->probe_count &&
+ 					ntpc->probe_count != 0) break;
+ 				send_packet(usd,ntpc->time_of_send);
+ 				++probes_sent;
+ 				to.tv_sec=ntpc->cycle_time;
+@@ -520,24 +523,26 @@ static void primary_loop(int usd, struct ntp_control *ntpc)
+ 			}
+ 			continue;
+ 		}
+ 		pack_len=recvfrom(usd,incoming,sizeof_incoming,0,
+ 		                  &sa_xmit,&sa_xmit_len);
+ 		error = ntpc->goodness;
+ 		if (pack_len<0) {
+ 			perror("recvfrom");
++			exit(1);
+ 		} else if (pack_len>0 && (unsigned)pack_len<sizeof_incoming){
+ 			get_packet_timestamp(usd, &udp_arrival_ntp);
+ 			if (check_source(pack_len, &sa_xmit, sa_xmit_len, ntpc)!=0) continue;
+ 			if (rfc1305print(incoming_word, &udp_arrival_ntp, ntpc, &error)!=0) continue;
+ 			/* udp_handle(usd,incoming,pack_len,&sa_xmit,sa_xmit_len); */
+ 		} else {
+ 			printf("Ooops.  pack_len=%d\n",pack_len);
+ 			fflush(stdout);
++			exit(1);
+ 		}
+ 		/* best rollover option: specify -g, -s, and -l.
+ 		 * simpler rollover option: specify -s and -l, which
+ 		 * triggers a magic -c 1 */
+ 		if (( error < ntpc->goodness && ntpc->goodness != 0 ) ||
+ 		    (probes_sent >= ntpc->probe_count && ntpc->probe_count != 0)) {
+ 			ntpc->set_clock = 0;
+ 			if (!ntpc->live) break;

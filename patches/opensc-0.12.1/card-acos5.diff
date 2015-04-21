@@ -1,0 +1,275 @@
+diff --git a/src/libopensc/card-acos5.c b/src/libopensc/card-acos5.c
+index 4bc0823..98fba62 100644
+--- a/src/libopensc/card-acos5.c
++++ b/src/libopensc/card-acos5.c
+@@ -26,7 +26,7 @@
+ #include "cardctl.h"
+ 
+ static struct sc_atr_table acos5_atrs[] = {
+-	{"3b:be:18:00:00:41:05:10:00:00:00:00:00:00:00:00:00:90:00", NULL, NULL,
++	{"3b:be:18:00:00:41:05:10:00:00:00:00:00:00:00:00:00", NULL, NULL,
+ 	 SC_CARD_TYPE_ACOS5_GENERIC, 0, NULL},
+ 	{NULL, NULL, NULL, 0, 0, NULL}
+ };
+@@ -57,6 +57,165 @@ static int acos5_init(sc_card_t * card)
+ 	return SC_SUCCESS;
+ }
+ 
++/* Generate or store a key */
++static int acos5_generate_store_key(sc_card_t *card,
++	struct sc_cardctl_setcos_gen_store_key_info *data)
++{
++	struct	sc_apdu apdu;
++	u8	sbuf[SC_MAX_APDU_BUFFER_SIZE];
++	int	r, len;
++
++	SC_FUNC_CALLED(card->ctx, SC_LOG_DEBUG_VERBOSE);
++
++	/* Setup key-generation paramters */
++	len = 0;
++	if (data->op_type == OP_TYPE_GENERATE)
++		sbuf[len++] = 0x92;	/* algo ID: RSA CRT */
++	else
++		sbuf[len++] = 0x9A;	/* algo ID: EXTERNALLY GENERATED RSA CRT */
++	sbuf[len++] = 0x00;	
++	sbuf[len++] = data->mod_len / 256;	/* 2 bytes for modulus bitlength */
++	sbuf[len++] = data->mod_len % 256;
++
++	sbuf[len++] = data->pubexp_len / 256;   /* 2 bytes for pubexp bitlength */
++	sbuf[len++] = data->pubexp_len % 256;
++	memcpy(sbuf + len, data->pubexp, (data->pubexp_len + 7) / 8);
++	len += (data->pubexp_len + 7) / 8;
++
++	if (data->op_type == OP_TYPE_STORE) {
++		sbuf[len++] = data->primep_len / 256;
++		sbuf[len++] = data->primep_len % 256;
++		memcpy(sbuf + len, data->primep, (data->primep_len + 7) / 8);
++		len += (data->primep_len + 7) / 8;
++		sbuf[len++] = data->primeq_len / 256;
++		sbuf[len++] = data->primeq_len % 256;
++		memcpy(sbuf + len, data->primeq, (data->primeq_len + 7) / 8);
++		len += (data->primeq_len + 7) / 8;		
++	}
++
++	sc_format_apdu(card, &apdu, SC_APDU_CASE_3_SHORT, 0x46, 0x00, 0x00);
++	apdu.cla = 0x00;
++	apdu.data = sbuf;
++	apdu.datalen = len;
++	apdu.lc	= len;
++
++	r = sc_transmit_apdu(card, &apdu);
++	SC_TEST_RET(card->ctx, SC_LOG_DEBUG_NORMAL, r, "APDU transmit failed");
++
++	r = sc_check_sw(card, apdu.sw1, apdu.sw2);
++	SC_TEST_RET(card->ctx, SC_LOG_DEBUG_NORMAL, r, "STORE/GENERATE_KEY returned error");
++
++	SC_FUNC_RETURN(card->ctx, SC_LOG_DEBUG_NORMAL, r);
++}
++
++static int acos5_activate_file(sc_card_t *card)
++{
++	int r;
++	u8 sbuf[2];
++	sc_apdu_t apdu;
++
++	sc_format_apdu(card, &apdu, SC_APDU_CASE_1, 0x44, 0x00, 0x00);
++	apdu.data = sbuf;
++
++	r = sc_transmit_apdu(card, &apdu);
++	SC_TEST_RET(card->ctx, SC_LOG_DEBUG_NORMAL, r, "APDU transmit failed");
++
++	r = sc_check_sw(card, apdu.sw1, apdu.sw2);
++	SC_TEST_RET(card->ctx, SC_LOG_DEBUG_NORMAL, r, "ACTIVATE_FILE returned error");
++
++	SC_FUNC_RETURN(card->ctx, SC_LOG_DEBUG_NORMAL, r);
++}
++
++/* Write internal data, e.g. add default pin-records to pin-file */
++static int acos5_putdata(struct sc_card *card, struct sc_cardctl_setcos_data_obj* data_obj)
++{
++	int				r;
++	struct sc_apdu			apdu;
++	static unsigned char 		pin[] = { 0x81, 0x44, 0x31, 0x31, 0x31, 0x31, 0x31, 0x31 };
++
++	SC_FUNC_CALLED(card->ctx, SC_LOG_DEBUG_VERBOSE);
++
++	memset(&apdu, 0, sizeof(apdu));
++	apdu.cse     = SC_APDU_CASE_3_SHORT;
++	apdu.cla     = 0x00;
++	apdu.ins     = 0xe2;
++	apdu.p1      = 0;
++	apdu.p2      = 0;
++	apdu.lc      = sizeof(pin);
++	apdu.datalen = sizeof(pin);
++	apdu.data    = pin;
++
++	r = sc_transmit_apdu(card, &apdu);
++	SC_TEST_RET(card->ctx, SC_LOG_DEBUG_NORMAL, r, "APDU transmit failed");
++
++	r = sc_check_sw(card, apdu.sw1, apdu.sw2);
++	SC_TEST_RET(card->ctx, SC_LOG_DEBUG_NORMAL, r, "PUT_DATA returned error");
++
++	SC_FUNC_RETURN(card->ctx, SC_LOG_DEBUG_NORMAL, r);
++}
++
++static int _acos5_putdata(struct sc_card *card, struct sc_cardctl_setcos_data_obj* data_obj)
++{
++	int				r;
++	struct sc_apdu			apdu;
++
++	SC_FUNC_CALLED(card->ctx, SC_LOG_DEBUG_VERBOSE);
++
++	memset(&apdu, 0, sizeof(apdu));
++	apdu.cse     = SC_APDU_CASE_3_SHORT;
++	apdu.cla     = 0x80;
++	apdu.ins     = 0xDA;
++	apdu.p1      = data_obj->P1;
++	apdu.p2      = data_obj->P2;
++	apdu.lc      = data_obj->DataLen;
++	apdu.datalen = data_obj->DataLen;
++	apdu.data    = data_obj->Data;
++
++	r = sc_transmit_apdu(card, &apdu);
++	SC_TEST_RET(card->ctx, SC_LOG_DEBUG_NORMAL, r, "APDU transmit failed");
++
++	r = sc_check_sw(card, apdu.sw1, apdu.sw2);
++	SC_TEST_RET(card->ctx, SC_LOG_DEBUG_NORMAL, r, "PUT_DATA returned error");
++
++	SC_FUNC_RETURN(card->ctx, SC_LOG_DEBUG_NORMAL, r);
++}
++
++/* Read internal data, e.g. get RSA public key */
++static int acos5_getdata(struct sc_card *card, struct sc_cardctl_setcos_data_obj* data_obj)
++{
++	int				r;
++	struct sc_apdu			apdu;
++
++	SC_FUNC_CALLED(card->ctx, SC_LOG_DEBUG_VERBOSE);
++
++	memset(&apdu, 0, sizeof(apdu));
++	apdu.cse     = SC_APDU_CASE_2_SHORT;
++	apdu.cla     = 0x00;
++	apdu.ins     = 0xCA;			/* GET DATA */
++	apdu.p1      = data_obj->P1;
++	apdu.p2      = data_obj->P2;
++	apdu.lc      = 0;
++	apdu.datalen = 0;
++	apdu.data    = data_obj->Data;
++
++	apdu.le      = 256;
++	apdu.resp    = data_obj->Data;
++	apdu.resplen = data_obj->DataLen;
++
++	r = sc_transmit_apdu(card, &apdu);
++	SC_TEST_RET(card->ctx, SC_LOG_DEBUG_NORMAL, r, "APDU transmit failed");
++
++	r = sc_check_sw(card, apdu.sw1, apdu.sw2);
++	SC_TEST_RET(card->ctx, SC_LOG_DEBUG_NORMAL, r, "GET_DATA returned error");
++
++	if (apdu.resplen > data_obj->DataLen)
++		r = SC_ERROR_WRONG_LENGTH;
++	else
++		data_obj->DataLen = apdu.resplen;
++
++	SC_FUNC_RETURN(card->ctx, SC_LOG_DEBUG_NORMAL, r);
++}
++
+ static int acos5_select_file_by_path(sc_card_t * card,
+ 				     const sc_path_t * in_path,
+ 				     sc_file_t ** file_out)
+@@ -82,8 +241,12 @@ static int acos5_select_file_by_path(sc_card_t * card,
+ 		int result;
+ 		memcpy(path.value, in_pos, 2);
+ 		result = iso_ops->select_file(card, &path, file_out);
+-		if (result != SC_SUCCESS)
++		if (result != SC_SUCCESS) {
++			if (result == SC_ERROR_NOT_ALLOWED && in_pos[0] == 0x3f && in_pos[1] == 0x00) {
++				result = SC_ERROR_FILE_NOT_FOUND;
++			}
+ 			return result;
++		}
+ 		in_len -= 2;
+ 		in_pos += 2;
+ 	}
+@@ -155,7 +318,32 @@ static int acos5_card_ctl(sc_card_t * card, unsigned long cmd, void *ptr)
+ 
+ 	case SC_CARDCTL_GET_SERIALNR:
+ 		return acos5_get_serialnr(card, (sc_serial_number_t *) ptr);
+-
++	case SC_CARDCTL_LIFECYCLE_GET: {
++		*((int*)ptr) = SC_CARDCTRL_LIFECYCLE_USER;
++		printf("returning lifecycle\n");
++		return SC_SUCCESS;
++	}
++	case SC_CARDCTL_LIFECYCLE_SET: {
++		printf("setting lifecycle %02x\n", *((int*)ptr));
++		return SC_SUCCESS;
++	}
++	case SC_CARDCTL_SETCOS_PUTDATA: {
++		return acos5_putdata(card,
++				(struct sc_cardctl_setcos_data_obj*) ptr);
++		break;
++	}
++	case SC_CARDCTL_SETCOS_GETDATA: {
++		return acos5_getdata(card,
++				(struct sc_cardctl_setcos_data_obj*) ptr);
++		break;
++	}
++	case SC_CARDCTL_SETCOS_ACTIVATE_FILE: {
++		return acos5_activate_file(card);
++	}
++	case SC_CARDCTL_SETCOS_GENERATE_STORE_KEY: {
++		return acos5_generate_store_key(card,
++				(struct sc_cardctl_setcos_gen_store_key_info *) ptr);
++	}
+ 	default:
+ 		return SC_ERROR_NOT_SUPPORTED;
+ 	}
+@@ -172,7 +360,7 @@ static int acos5_list_files(sc_card_t * card, u8 * buf, size_t buflen)
+ 	/*
+ 	 * Check parameters.
+ 	 */
+-	if (!buf || (buflen & 1))
++	if (!buf)
+ 		return SC_ERROR_INVALID_ARGUMENTS;
+ 
+ 	/*
+@@ -215,6 +403,29 @@ static int acos5_list_files(sc_card_t * card, u8 * buf, size_t buflen)
+ 	return (bufp - buf);
+ }
+ 
++static int
++acos5_delete_file(sc_card_t *card, const sc_path_t *path)
++{
++	int r;
++	sc_apdu_t apdu;
++
++	SC_FUNC_CALLED(card->ctx, SC_LOG_DEBUG_VERBOSE);
++	if (path->type != SC_PATH_TYPE_FILE_ID && path->len != 2) {
++		sc_debug(card->ctx, SC_LOG_DEBUG_NORMAL, "File type has to be SC_PATH_TYPE_FILE_ID\n");
++		SC_FUNC_RETURN(card->ctx, SC_LOG_DEBUG_NORMAL, SC_ERROR_INVALID_ARGUMENTS);
++	}
++	r = sc_select_file(card, path, NULL);
++	SC_TEST_RET(card->ctx, SC_LOG_DEBUG_NORMAL, r, "Unable to select file to be deleted");
++	
++	sc_format_apdu(card, &apdu, SC_APDU_CASE_1, 0xE4, 0x00, 0x00);
++	apdu.cla = 0x00;
++
++	r = sc_transmit_apdu(card, &apdu);
++	SC_TEST_RET(card->ctx, SC_LOG_DEBUG_NORMAL, r, "APDU transmit failed");
++	return sc_check_sw(card, apdu.sw1, apdu.sw2);
++}
++
++
+ static struct sc_card_driver *sc_get_driver(void)
+ {
+ 	struct sc_card_driver *iso_drv = sc_get_iso7816_driver();
+@@ -227,6 +438,8 @@ static struct sc_card_driver *sc_get_driver(void)
+ 	acos5_ops.select_file = acos5_select_file;
+ 	acos5_ops.card_ctl = acos5_card_ctl;
+ 	acos5_ops.list_files = acos5_list_files;
++	acos5_ops.delete_file = acos5_delete_file;
++
+ 
+ 	return &acos5_drv;
+ }

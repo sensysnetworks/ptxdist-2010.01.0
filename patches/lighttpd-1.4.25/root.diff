@@ -1,0 +1,22 @@
+diff --git a/lighttpd-1.4.25/src/server.c b/lighttpd-1.4.25/src/server.c
+index 1bedd00..93d3c7f 100644
+--- a/lighttpd-1.4.25/src/server.c
++++ b/lighttpd-1.4.25/src/server.c
+@@ -751,7 +751,7 @@ int main (int argc, char **argv) {
+ 				return -1;
+ 			}
+ 
+-			if (pwd->pw_uid == 0) {
++			if (0 && pwd->pw_uid == 0) {
+ 				log_error_write(srv, __FILE__, __LINE__, "s",
+ 						"I will not set uid to 0\n");
+ 				return -1;
+@@ -764,7 +764,7 @@ int main (int argc, char **argv) {
+ 					"can't find groupname", srv->srvconf.groupname);
+ 				return -1;
+ 			}
+-			if (grp->gr_gid == 0) {
++			if (0 && grp->gr_gid == 0) {
+ 				log_error_write(srv, __FILE__, __LINE__, "s",
+ 						"I will not set gid to 0\n");
+ 				return -1;

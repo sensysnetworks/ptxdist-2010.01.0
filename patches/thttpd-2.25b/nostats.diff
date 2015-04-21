@@ -1,0 +1,13 @@
+diff --git a/config.h b/config.h
+index d0c3b17..4d9f283 100644
+--- a/config.h
++++ b/config.h
+@@ -291,7 +291,7 @@
+ /* CONFIGURE: Seconds between stats syslogs.  If this is undefined then
+ ** no stats are accumulated and no stats syslogs are done.
+ */
+-#define STATS_TIME 3600
++/* #define STATS_TIME 3600 */
+ 
+ /* CONFIGURE: The mmap cache tries to keep the total number of mapped
+ ** files below this number, so you don't run out of kernel file descriptors.

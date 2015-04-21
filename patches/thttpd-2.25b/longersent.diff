@@ -1,0 +1,11 @@
+--- a/config.h	2011-02-09 23:15:28.205396731 -0800
++++ b/config.h	2011-02-09 23:14:32.551146413 -0800
+@@ -94,7 +94,7 @@
+ 
+ /* CONFIGURE: How many seconds before an idle connection gets closed.
+ */
+-#define IDLE_SEND_TIMELIMIT 300
++#define IDLE_SEND_TIMELIMIT (3600)
+ 
+ /* CONFIGURE: The syslog facility to use.  Using this you can set up your
+ ** syslog.conf so that all thttpd messages go into a separate file.  Note
