@@ -1,0 +1,8 @@
+## SECTION=communication
+
+config UUCP
+	tristate
+	prompt "uucp"
+	help
+	  standard unix communcation package.
+

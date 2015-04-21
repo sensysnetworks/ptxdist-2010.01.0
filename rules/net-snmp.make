@@ -43,12 +43,13 @@ NET_SNMP_ENV 	:=  $(CROSS_ENV)
 #
 # autoconf
 #
+#    --with-mib-modules=$(PTXCONF_NET_SNMP_MIB_MODULES) \
+#    --with-mibs=$(PTXCONF_NET_SNMP_DEFAULT_MIBS) \
+#
 NET_SNMP_AUTOCONF := \
 	$(CROSS_AUTOCONF_USR) \
 	--with-defaults \
 	--disable-manuals \
-	--with-mib-modules=$(PTXCONF_NET_SNMP_MIB_MODULES) \
-	--with-mibs=$(PTXCONF_NET_SNMP_DEFAULT_MIBS) \
 	--with-logfile=$(call remove_quotes,$(PTXCONF_NET_SNMP_LOGFILE)) \
 	--with-persistent-directory=$(call remove_quotes,$(PTXCONF_NET_SNMP_PERSISTENT_DIR)) \
 	--with-default-snmp-version=$(call remove_quotes,$(PTXCONF_NET_SNMP_DEFAULT_VERSION)) \
@@ -254,7 +255,7 @@ NET_SNMP_UCDMIBS := UCD-SNMP-MIB.txt UCD-DEMO-MIB.txt UCD-IPFWACC-MIB.txt \
 
 ## FIXME:  for now, you need to manually edit this list to represent what mibs to install on target.
 NET_SNMP_MIBS := $(NET_SNMP_V1MIBS) $(NET_SNMP_V2MIBS) $(NET_SNMP_V3MIBS) \
-	$(NET_SNMP_AGENTMIBS) $(NET_SNMP_IANAMIBS) $(NET_SNMP_RFCMIBS) $(NET_SNMP_NETSNMPMIBS) $(NET_SNNP_UCDMIBS)
+	$(NET_SNMP_AGENTMIBS) $(NET_SNMP_IANAMIBS) $(NET_SNMP_RFCMIBS) $(NET_SNMP_NETSNMPMIBS) $(NET_SNMP_UCDMIBS)
 
 $(STATEDIR)/net-snmp.targetinstall:
 	@$(call targetinfo)

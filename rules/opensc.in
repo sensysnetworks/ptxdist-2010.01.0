@@ -1,0 +1,8 @@
+## SECTION=applications
+
+config OPENSC
+	boolean
+	prompt "opensc"
+	help
+	  open smart card
+

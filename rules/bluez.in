@@ -1,0 +1,9 @@
+## SECTION=communication
+
+menuconfig BLUEZ
+	bool
+	prompt "bluez                         "
+	depends on DBUS
+	depends on LIBUSB_COMPAT
+	help
+	  official Linux Bluetooth protocol stack - base utils

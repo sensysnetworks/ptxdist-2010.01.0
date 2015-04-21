@@ -1,0 +1,8 @@
+## SECTION=communication
+
+config PPTP
+	tristate
+	prompt "pptp"
+	help
+	  pptp vpn client
+

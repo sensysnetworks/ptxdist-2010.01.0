@@ -174,6 +174,7 @@ $(STATEDIR)/lighttpd.targetinstall:
 #	# configs
 #	#
 	@$(call install_alternative, lighttpd, 0, 0, 0644, /etc/lighttpd/lighttpd.conf)
+	@$(call install_alternative, lighttpd, 0, 0, 0644, /etc/lighttpd/lighttpd-ssl.conf)
 
 	@$(call install_replace, lighttpd, /etc/lighttpd/lighttpd.conf, \
 		@CGI@, $(call ptx/ifdef, PTXCONF_PHP5_SAPI_CGI,,#))

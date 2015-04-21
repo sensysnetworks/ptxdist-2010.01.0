@@ -1,0 +1,8 @@
+## SECTION=disk_and_file
+
+config PARTED
+	bool
+	prompt "parted                         "
+	help
+	  disk partitioning tool
+
